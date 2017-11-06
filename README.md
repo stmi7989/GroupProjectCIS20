@@ -1,7 +1,7 @@
 # GroupProjectCIS20
 Group project for CIS 20 Assembly Language
 
-
+Project collaborators: Inderpal Virdi, Padraic Reilly, Obaid Hasseeb, Stephen Miller
 
 Create a procedure named CalcGrade that receives an integer value between 0 and 100, and returns a 
 single capital letter in the AL register. Preserve all other regist
