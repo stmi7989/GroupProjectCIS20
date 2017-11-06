@@ -18,8 +18,7 @@ Score Range
  C 
 60 to  69       
  D 
- 0 to  
-59        
+ 0 to  59        
  F 
  
 Write a test program that generates 10 random integers between 50 and 100, inclusive. Each time an 
