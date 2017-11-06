@@ -21,6 +21,7 @@ Score Range
  0 to  
 59        
  F 
+ 
 Write a test program that generates 10 random integers between 50 and 100, inclusive. Each time an 
 integer is generated, pass it to the CalcGrade procedure.  You can test your program using a debugger, 
 or if you prefer to use the book's library, you can display each integer and its corresponding letter grade
