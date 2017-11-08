@@ -13,7 +13,10 @@ TITLE CalcGrade								      (CalcGrade.asm)
 	; Score 0 to 59 Grade F
 	; Write test program that generates 10 random integers between 50 and 100 inclusive. 
 	; Each time an integer is generated, it is passed to the CalcGrade procedure.
-
+.386
+.model flat,stdcall
+.stack 4096
+ExitProcess PROTO,dwExitCode:dword
 INCLUDE Irvine32.inc
     
 .data
@@ -33,11 +36,14 @@ INCLUDE Irvine32.inc
 	grade_string BYTE "Your grade is ",0
 	grade BYTE ?,0
 	out_of_range BYTE "The integer is not <= 100 and >= 0",0
+	too_much BYTE "That's too much!",0
+	not_enough BYTE "That's not enough!",0
 	
 	.code
 main PROC
 	call Menu
-	exit
+	
+	invoke ExitProcess,0
 main ENDP
 
 Menu PROC
@@ -117,13 +123,34 @@ again:
 Random ENDP
 
 User_Input PROC
-	; ask for user input
+ask: ; for user input
 	mov edx, OFFSET get_number_of_grades
 	call WriteString
 	call ReadInt
 	call Crlf
+
+	; check that user input is in range
+	cmp eax,51
+	jge too_high
+	jmp begin
+
+too_high:
+	mov edx, OFFSET too_much
+	call WriteString
+	call Crlf
+	jmp ask
+
+	cmp eax,0
+	jb too_low
+	jmp begin
+
+too_low:
+	mov edx, OFFSET not_enough
+	call WriteString
+	call Crlf
+	jmp ask
 	
-	;begin loop
+begin: ; loop
 	call Randomize
 	mov ecx,eax
 again:
