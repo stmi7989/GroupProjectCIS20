@@ -1,8 +1,7 @@
 TITLE CalcGrade								      (CalcGrade.asm)
 ; Names : Inderpal Virdi, Padraic Reilly, Obaid Hasseeb, Stephen Miller
 ; Creation Date : 11/15/17
-; Revisions : 1
-; Date : 11/06/17
+; Revisions : 2
 ; Program Description :
 	; Create a procedure named CalcGrade that receives an integer value between 0 and 100, and returns  single capital letter in the AL register. 
 	; Preserve all other values between calls to the procedure. The letter returned by the procedure should be according to the following:
