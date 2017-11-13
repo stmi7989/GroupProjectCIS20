@@ -38,6 +38,7 @@ INCLUDE Irvine32.inc
 	out_of_range BYTE "The integer is not <= 100 and >= 0",0
 	too_much BYTE "That's too much!",0
 	not_enough BYTE "That's not enough!",0
+	wrong_letter BYTE "Input must be A, B, or C",0
 	
 	.code
 main PROC
@@ -68,13 +69,17 @@ begin:
 	call WriteString
 	call Crlf
 
-	; gets user input
-
+get: ; user input
 	mov edx, OFFSET get_option
 	call WriteString
 	call ReadChar
 	call Crlf
-	or al, 20h
+	or al, 20h  
+	;check range of input against ASCII binary values of A-C
+	cmp al, option_A
+	jl too_low
+	cmp al, option_C
+	jg too_high
 	cmp al, option_A
 	je optionA
 	cmp al, option_B
@@ -101,6 +106,18 @@ optionC:
 	call WriteString
 	call Crlf
 	ret
+
+too_high:
+	mov edx, OFFSET wrong_letter
+	call WriteString
+	call Crlf
+	jmp get
+
+too_low:
+	mov edx, OFFSET wrong_letter
+	call WriteString
+	call Crlf
+	jmp get
 Menu ENDP
 
 Random PROC
@@ -132,6 +149,8 @@ ask: ; for user input
 	; check that user input is in range
 	cmp eax,51
 	jge too_high
+	cmp eax,0
+	jle too_low
 	jmp begin
 
 too_high:
@@ -140,9 +159,7 @@ too_high:
 	call Crlf
 	jmp ask
 
-	cmp eax,0
-	jb too_low
-	jmp begin
+
 
 too_low:
 	mov edx, OFFSET not_enough
@@ -219,4 +236,5 @@ finished:
 	ret
 
 GradeCalc ENDP
+
 END main
