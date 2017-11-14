@@ -158,8 +158,6 @@ too_high:
 	call Crlf
 	jmp ask
 
-
-
 too_low:
 	mov edx, OFFSET not_enough
 	call WriteString
