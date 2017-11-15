@@ -18,6 +18,7 @@ TITLE CalcGrade								      (CalcGrade.asm)
 ExitProcess PROTO,dwExitCode:dword
 INCLUDE Irvine32.inc
     
+    
 .data
 	greet BYTE "Welcome to GradeCalc",0
 	goodbye BYTE "Quitting",0
@@ -39,6 +40,7 @@ INCLUDE Irvine32.inc
 	not_enough BYTE "That's not enough!",0
 	wrong_letter BYTE "Input must be A, B, or C",0
 	
+	
 	.code
 main PROC
 	call Menu
@@ -46,166 +48,175 @@ main PROC
 	invoke ExitProcess,0
 main ENDP
 
+
 Menu PROC
 	; Displays menu
 begin:
-	mov edx, OFFSET menu_1
-	call WriteString
-	call Crlf
-	mov edx, OFFSET menu_2
-	call WriteString
-	call Crlf
-	mov edx, OFFSET menu_3
-	call WriteString
-	call Crlf
-	mov edx, OFFSET menu_4
-	call WriteString
-	call Crlf
-	mov edx, OFFSET menu_5
-	call WriteString
-	call Crlf
-	mov edx, OFFSET menu_6
-	call WriteString
-	call Crlf
+	mov	edx, OFFSET menu_1
+	call	WriteString
+	call	Crlf
+	mov	edx, OFFSET menu_2
+	call	WriteString
+	call	Crlf
+	mov	edx, OFFSET menu_3
+	call	WriteString
+	call	Crlf
+	mov	edx, OFFSET menu_4
+	call	WriteString
+	call	Crlf
+	mov	edx, OFFSET menu_5
+	call	WriteString
+	call	Crlf
+	mov	edx, OFFSET menu_6
+	call	WriteString
+	call	Crlf
 
 get: ; user input
-	mov edx, OFFSET get_option
-	call WriteString
-	call ReadChar
-	call Crlf
-	or al, 20h  
+	mov	edx, OFFSET get_option
+	call	WriteString
+	call	ReadChar
+	call	Crlf
+	or	al, 20h  ; ORs the input value to make it lowercase
 	;check range of input against ASCII binary values of A-C
-	cmp al, option_A
-	jl too_low
-	cmp al, option_C
-	jg too_high
-	cmp al, option_A
-	je optionA
-	cmp al, option_B
-	je optionB
-	cmp al, option_C
-	je optionC
+	cmp	al, option_A
+	jl	too_low
+	cmp	al, option_C
+	jg	too_high
+	cmp	al, option_A
+	je	optionA
+	cmp	al, option_B
+	je	optionB
+	cmp	al, option_C
+	je	optionC
 
 optionA:
 	; user chose option A -
 	; returns 10 random grades
-	call Random
-	jmp begin
+	call	Random
+	jmp	begin
 
 optionB:
 	; user chose option B -
 	; user chooses how many grades to return
-	call User_Input
-	jmp begin
+	call	User_Input
+	jmp	begin
 
 optionC:
 	; user chose option C -
 	; user chose to quit the program
-	mov edx, OFFSET goodbye
-	call WriteString
-	call Crlf
+	mov	edx, OFFSET goodbye
+	call	WriteString
+	call	Crlf
 	ret
 
 too_high:
-	mov edx, OFFSET wrong_letter
-	call WriteString
-	call Crlf
-	jmp get
+	; uses ascii binary value to check if
+	; user entered a letter "greater" than c
+	mov	edx, OFFSET wrong_letter
+	call	WriteString
+	call	Crlf
+	jmp	get
 
 too_low:
-	mov edx, OFFSET wrong_letter
-	call WriteString
-	call Crlf
-	jmp get
+	; uses ascii binary value to check if
+	; user entered a letter "less" than a
+	mov	edx, OFFSET wrong_letter
+	call	WriteString
+	call	Crlf
+	jmp	get
 Menu ENDP
 
+
 Random PROC
-	call Randomize
-	mov ecx,10
+	; procedure to generate 10 random numbers
+	call	Randomize
+	mov	ecx,10
 again: 
-	mov eax,51
-	call RandomRange
-	add eax,50
-	call GradeCalc
-	mov edx,0
-	mov edx, OFFSET grade_string
-	call WriteString
-	mov grade,al
-	mov edx, OFFSET grade
-	call WriteString
-	call Crlf
-	loop again
-    ret
+	mov	eax,51
+	call	RandomRange
+	add	eax,50
+	call	GradeCalc
+	mov	edx,0
+	mov	edx, OFFSET grade_string
+	call	WriteString
+	mov	grade,al
+	mov	edx, OFFSET grade
+	call	WriteString
+	call	Crlf
+	loop	again
+    	ret
 Random ENDP
 
+
 User_Input PROC
+	; procedure to get user input and return 
+	; number of grades specified by user
 ask: ; for user input
-	mov edx, OFFSET get_number_of_grades
-	call WriteString
-	call ReadInt
-	call Crlf
+	mov	edx, OFFSET get_number_of_grades
+	call	WriteString
+	call	ReadInt
+	call	Crlf
 
 	; check that user input is in range
-	cmp eax,51
-	jge too_high
-	cmp eax,0
-	jle too_low
-	jmp begin
+	cmp	eax,51
+	jge	too_high
+	cmp	eax,0
+	jle	too_low
+	jmp	begin
 
 too_high:
-	mov edx, OFFSET too_much
-	call WriteString
-	call Crlf
-	jmp ask
-
-
+	mov	edx, OFFSET too_much
+	call	WriteString
+	call	Crlf
+	jmp	ask
 
 too_low:
-	mov edx, OFFSET not_enough
-	call WriteString
-	call Crlf
-	jmp ask
+	mov	edx, OFFSET not_enough
+	call	WriteString
+	call	Crlf
+	jmp	ask
 	
 begin: ; loop
-	call Randomize
-	mov ecx,eax
+	call	Randomize
+	mov	ecx,eax
 again:
-	mov eax,51
-	call RandomRange
-	add eax,50
-	call GradeCalc
-	mov edx,0
-	mov edx, OFFSET grade_string
-	call WriteString
-	mov grade,al
-	mov edx, OFFSET grade
-	call WriteString
-	call Crlf
-	loop again
+	mov	eax,51
+	call	RandomRange
+	add	eax,50
+	call	GradeCalc
+	mov	edx,0
+	mov	edx, OFFSET grade_string
+	call	WriteString
+	mov	grade,al
+	mov	edx, OFFSET grade
+	call	WriteString
+	call 	Crlf
+	loop 	again
 	ret
 User_Input ENDP
 
 GradeCalc PROC
+
 OutofRangeHigh:
-	cmp	eax,101
-	jb  Grade_A
-	mov edx, OFFSET out_of_range
-	call WriteString
-	call Crlf
-	call WriteDec
-	jmp finished
+	cmp 	eax,101
+	jb  	Grade_A
+	mov 	edx, OFFSET out_of_range
+	call 	WriteString
+	call 	Crlf
+	call 	WriteDec
+	jmp 	finished
 
 Grade_A:
-	cmp	eax,90
-	jb	Grade_B
-	mov	al,'A'
-	jmp	finished
+	cmp 	eax,90
+	jb 	Grade_B
+	mov 	al,'A'
+	jmp 	finished
 
 Grade_B:
-	cmp	eax,80
-	jb	Grade_C
-	mov	al,'B'
-	jmp	finished
+	cmp 	eax,80
+	jb 	Grade_C
+	mov 	al,'B'
+	jmp 	finished
 	
 Grade_C:
 	cmp	eax,70
@@ -220,17 +231,17 @@ Grade_D:
 	jmp	finished
 
 Grade_F:
-	cmp eax,0
-	jb  OutofRangeLow
+	cmp 	eax,0
+	jb  	OutofRangeLow
 	mov	al,'F'
-	jmp finished
+	jmp 	finished
 
 OutofRangeLow:
-	mov edx, OFFSET out_of_range
-	call WriteString
-	call Crlf
-	call WriteDec
-	jmp finished
+	mov 	edx, OFFSET out_of_range
+	call 	WriteString
+	call 	Crlf
+	call 	WriteDec
+	jmp 	finished
 finished:
 	ret
 
