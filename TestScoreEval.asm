@@ -195,8 +195,8 @@ again:
 	ret
 User_Input ENDP
 
-GradeCalc PROC
 
+GradeCalc PROC
 OutofRangeHigh:
 	cmp 	eax,101
 	jb  	Grade_A
@@ -242,9 +242,10 @@ OutofRangeLow:
 	call 	Crlf
 	call 	WriteDec
 	jmp 	finished
+	
 finished:
 	ret
-
 GradeCalc ENDP
+
 
 END main
